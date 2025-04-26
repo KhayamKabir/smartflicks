@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | SmartFlicks{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+
+        <!-- All Users Section -->
+        <div class="col-md-6">
+            <h4 class="mb-3">All Users</h4>
+            {% if users %}
+                {% for user in users %}
+                    <div class="d-flex align-items-center bg-white p-3 mb-3 shadow-sm rounded">
+                        {% set pic = user['profile_pic'] if user['profile_pic'] else 'default.jpg' %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ pic) }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+                        <div class="flex-grow-1">
+                            <strong>{{ user['username'] }}</strong>
+                        </div>
+                        <a href="/send_friend_request/{{ user['id'] }}" class="btn btn-sm btn-primary">Add Friend</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No other users found.</p>
+            {% endif %}
+        </div>
+
+        <!-- My Friends Section -->
+        <div class="col-md-6">
+            <h4 class="mb-3">My Friends</h4>
+            {% if friends %}
+                {% for friend in friends %}
+                    <div class="d-flex align-items-center bg-white p-3 mb-3 shadow-sm rounded">
+                        {% set pic = friend['profile_pic'] if friend['profile_pic'] else 'default.jpg' %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ pic) }}" alt="Friend Avatar" class="rounded-circle me-3" width="50" height="50">
+                        <div class="flex-grow-1">
+                            <strong>{{ friend['username'] }}</strong>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="/recommend/{{ friend['id'] }}" class="btn btn-sm btn-outline-info">Recommend</a>
+                            <a href="/chat/{{ friend['id'] }}" class="btn btn-sm btn-outline-secondary">Chat</a>
+                            <a href="/remove_friend/{{ friend['id'] }}" class="btn btn-sm btn-outline-danger">Remove</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You haven't added any friends yet.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Friend Requests | SmartFlicks{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h2>🔔 Friend Requests</h2>
+        <p class="text-muted">Manage your connections easily</p>
+    </div>
+
+    {% if requests %}
+        <div class="row justify-content-center">
+            {% for req in requests %}
+                <div class="col-md-8 mb-4">
+                    <div class="card p-3 d-flex flex-row align-items-center shadow-sm">
+                        
+                        <!-- Profile Picture -->
+                        <img src="{{ url_for('static', filename='uploads/' ~ (req['profile_pic'] if req['profile_pic'] else 'default_avatar.png')) }}" 
+                             alt="Avatar" 
+                             class="rounded-circle me-3" 
+                             style="width: 55px; height: 55px; object-fit: cover; border: 2px solid #0d6efd;">
+                        
+                        <!-- Username and Message -->
+                        <div class="flex-grow-1">
+                            <h5 class="mb-0">{{ req['username'] }}</h5>
+                            <small class="text-muted">sent you a friend request</small>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2">
+                            <a href="/accept_request/{{ req['id'] }}/{{ req['sender_id'] }}" class="btn btn-success btn-sm">Accept</a>
+                            <a href="/decline_request/{{ req['id'] }}" class="btn btn-danger btn-sm">Decline</a>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            🚫 No pending friend requests yet.<br>Go explore and connect!
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-5">
+        <a href="/dashboard" class="btn btn-outline-secondary">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

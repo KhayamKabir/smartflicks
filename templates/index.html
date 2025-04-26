@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to SmartFlicks{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="welcome-card text-center shadow-lg p-5 rounded" style="background: white;">
+        <h1 class="mb-3">🎬 Welcome to SmartFlicks</h1>
+        <p class="text-muted mb-4">Your personalized movie recommendation hub.</p>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <a href="/login" class="btn btn-primary btn-lg">Login</a>
+            <a href="/register" class="btn btn-outline-secondary btn-lg">Register</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

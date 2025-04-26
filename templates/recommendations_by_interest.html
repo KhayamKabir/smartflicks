@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Recommended for You | SmartFlicks{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mb-4">
+        <h2>🎬 Recommended for You</h2>
+        <p class="text-muted">Movies matching your interests and ratings!</p>
+    </div>
+
+    {% if movies %}
+        <div class="row">
+            {% for movie in movies %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <!-- 🖼️ Movie Poster -->
+                        <img src="{{ movie['poster'] }}" alt="{{ movie['title'] }}" 
+                             class="card-img-top" style="height: 300px; object-fit: cover;">
+
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ movie['title'] }}</h5>
+                            <p><span class="badge bg-primary">{{ movie['genre'] }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            🚫 No movies found based on your interests yet.<br> Try updating your interests or check back later!
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

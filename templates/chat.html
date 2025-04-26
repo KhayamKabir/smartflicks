@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Chat with {{ friend['username'] }} | SmartFlicks{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Chat with {{ friend['username'] }}</h2>
+        <a class="btn btn-outline-secondary" href="/dashboard">← Back to Dashboard</a>
+    </div>
+
+    <!-- 🗨️ Chat Messages Area -->
+    <div id="chat-messages" class="chat-box mb-4" style="background: white; padding: 1rem; border-radius: 10px; height: 400px; overflow-y: scroll;">
+        {% for msg in messages %}
+            <div class="message {% if msg['sender_name'] == session['username'] %}sent{% endif %}" style="margin-bottom: 0.8rem; {% if msg['sender_name'] == session['username'] %}text-align: right;{% endif %}">
+                <div class="sender-name" style="font-weight: bold;">{{ msg['sender_name'] }}</div>
+                <div class="message-text" style="display: inline-block; background-color: {% if msg['sender_name'] == session['username'] %}#0d6efd{% else %}#e2e6ea{% endif %}; padding: 0.5rem 1rem; border-radius: 20px; color: {% if msg['sender_name'] == session['username'] %}white{% else %}black{% endif %}; max-width: 75%;">{{ msg['message'] }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- 📝 Message Input -->
+    <form method="POST" action="/chat/{{ friend_id }}">
+        <div class="input-group">
+            <input type="text" name="message" class="form-control" placeholder="Type a message..." required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const chatBox = document.querySelector('#chat-messages');
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    scrollToBottom();
+
+    setInterval(() => {
+        fetch(window.location.href)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newMessages = doc.querySelector('#chat-messages');
+                if (newMessages) {
+                    chatBox.innerHTML = newMessages.innerHTML;
+                    scrollToBottom();
+                }
+            });
+    }, 5000);
+</script>
+{% endblock %}

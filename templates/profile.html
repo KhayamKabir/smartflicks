@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile | SmartFlicks{% endblock %}
+
+{% block content %}
+<!-- Cover Photo Section -->
+<div class="cover-photo position-relative">
+    {% set pic = user['profile_pic'] if user['profile_pic'] else 'default.jpg' %}
+    <img src="{{ url_for('static', filename='uploads/' ~ pic) }}" alt="Profile Picture" class="profile-pic">
+</div>
+
+<!-- Profile Content Section -->
+<div class="container">
+    <div class="profile-content text-center">
+        <h3 class="mb-0">{{ user['username'] }}</h3>
+        <small class="text-muted mb-4 d-block">Edit your profile details</small>
+
+        <!-- ✅ Email Update Form -->
+        <form method="POST" action="/profile" class="text-start">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" value="{{ user['email'] or '' }}" placeholder="Enter your email">
+            <button type="submit" class="btn btn-primary w-100 mt-3">💾 Update Profile</button>
+        </form>
+
+        <hr>
+
+        <!-- ✅ Password Change Form -->
+        <div class="text-start">
+            <button class="btn btn-outline-secondary w-100" onclick="togglePasswordForm()">Change Password</button>
+
+            <form method="POST" action="/change_password" id="passwordForm" class="hidden mt-3">
+                <label>Current Password</label>
+                <input type="password" name="current_password" class="form-control" placeholder="Enter current password" required>
+
+                <label>New Password</label>
+                <input type="password" name="new_password" class="form-control" placeholder="Enter new password" required>
+
+                <label>Confirm New Password</label>
+                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm new password" required>
+
+                <button type="submit" class="btn btn-success w-100 mt-3">✅ Confirm Change</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <!-- ✅ Profile Picture Upload Form -->
+        <form method="POST" action="/upload_profile_pic" enctype="multipart/form-data" class="text-start mt-4">
+            <label>Change Profile Picture</label>
+            <input type="file" name="profile_pic" class="form-control" required>
+            <button type="submit" class="btn btn-outline-primary w-100 mt-3">Upload Picture</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="/dashboard" class="btn btn-link">← Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<!-- JS to Toggle Password Form -->
+<script>
+    function togglePasswordForm() {
+        document.getElementById('passwordForm').classList.toggle('hidden');
+    }
+</script>
+
+<style>
+    .cover-photo {
+        background: linear-gradient(to right, #4e54c8, #8f94fb);
+        height: 200px;
+        position: relative;
+    }
+    .profile-pic {
+        width: 140px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid white;
+        position: absolute;
+        bottom: -70px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .profile-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 80px;
+    }
+    .hidden {
+        display: none;
+    }
+</style>
+{% endblock %}

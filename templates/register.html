@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Register | SmartFlicks{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="register-form mt-5">
+        <h2 class="text-center mb-4">🚀 Create Your Account</h2>
+
+        <form method="POST">
+            <div class="mb-3">
+                <input type="text" name="username" class="form-control" placeholder="👤 Username" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="email" name="email" class="form-control" placeholder="📧 Email Address (optional)">
+            </div>
+
+            <div class="mb-3">
+                <input type="password" name="password" class="form-control" placeholder="🔒 Password" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="password" name="confirm_password" class="form-control" placeholder="🔒 Confirm Password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Create Account 🚀</button>
+        </form>
+
+        <p class="text-center mt-3">
+            Already have an account? <a href="/login" class="text-decoration-none">Login here</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    .register-form {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        max-width: 400px;
+        margin: auto;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+</style>
+{% endblock %}
