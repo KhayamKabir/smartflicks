@@ -10,11 +10,13 @@
     </div>
 
     {% if movies %}
-    <div class="row g-4">
+    <div class="row g-4" id="movie-container">
         {% for movie in movies %}
-        <div class="col-md-4 col-lg-3">
+        <div class="col-md-4 col-lg-3 movie-card-box" style="display: none;">
             <div class="card h-100 shadow-sm text-center p-2">
-                <img src="{{ movie['poster'] }}" alt="{{ movie['title'] }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                <img src="{{ movie['poster'] }}" alt="{{ movie['title'] }}" class="card-img-top"
+                     style="height: 250px; object-fit: cover;"
+                     onerror="this.onerror=null;this.src='/static/default_poster.png';">
                 <div class="card-body">
                     <h5 class="card-title">{{ movie['title'] }}</h5>
                     <p><span class="badge bg-success">{{ movie['genre'] }}</span></p>
@@ -22,6 +24,11 @@
             </div>
         </div>
         {% endfor %}
+    </div>
+
+    <!-- Show More Button -->
+    <div class="text-center mt-4">
+        <button id="show-more-btn" class="btn btn-outline-primary">Show More</button>
     </div>
     {% else %}
     <div class="alert alert-warning text-center mt-4">
@@ -33,4 +40,33 @@
         <a href="/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const movieCards = document.querySelectorAll('.movie-card-box');
+        const showMoreBtn = document.getElementById('show-more-btn');
+        let itemsToShow = 10;
+
+        function updateVisibility() {
+            movieCards.forEach((card, index) => {
+                card.style.display = index < itemsToShow ? 'block' : 'none';
+            });
+
+            if (itemsToShow >= movieCards.length) {
+                showMoreBtn.style.display = 'none';
+            }
+        }
+
+        if (showMoreBtn) {
+            showMoreBtn.addEventListener('click', () => {
+                itemsToShow += 10;
+                updateVisibility();
+            });
+        }
+
+        updateVisibility(); // Initial call
+    });
+</script>
 {% endblock %}

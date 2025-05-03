@@ -1,15 +1,31 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}SmartFlicks{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <style>
         body {
             background-color: #f8f9fa;
             padding-top: 80px;
+        }
+
+        .search-form input {
+            width: 250px;
+        }
+
+        @media (max-width: 768px) {
+            .search-form input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -19,21 +35,27 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="/dashboard">🎬 SmartFlicks</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="/interests">Interests</a></li>
-                <li class="nav-item"><a class="nav-link" href="/my_interest_recommendations">Interest-Based Recs</a></li>
-                <li class="nav-item"><a class="nav-link" href="/combined_recommendations">Social Recs</a></li>
-                <li class="nav-item"><a class="nav-link" href="/my_recommendations">My Recommendations</a></li>
-                <li class="nav-item"><a class="nav-link" href="/watchlist">My Watchlist</a></li>
-                <li class="nav-item"><a class="nav-link" href="/friend_requests">Requests</a></li>
-                <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
-                <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-            </ul>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <form class="d-flex ms-3 me-auto search-form" method="GET" action="/search_movies">
+                <input class="form-control me-2" type="search" name="query" placeholder="Search movies..." aria-label="Search" required>
+                <button class="btn btn-outline-light" type="submit">🔍</button>
+            </form>
+
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/dashboard">Dashboard</a>
+                <a class="nav-link" href="/interests">Interests</a>
+                <a class="nav-link" href="/my_interest_recommendations">Interest Based Recommendations</a>
+                <a class="nav-link" href="/combined_recommendations">Social Recommendationss</a>
+                <a class="nav-link" href="/my_recommendations">My Recommendations</a>
+                <a class="nav-link" href="/watchlist">My Watchlist</a>
+                <a class="nav-link" href="/friend_requests">Requests</a>
+                <a class="nav-link" href="/profile">Profile</a>
+                <a class="nav-link" href="/logout">Logout</a>
+            </div>
         </div>
     </div>
 </nav>
@@ -44,6 +66,11 @@
     {% endblock %}
 </div>
 
+<!-- ✅ Bootstrap Bundle JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ✅ Optional JavaScript Block for Pages -->
+{% block scripts %}
+{% endblock %}
 </body>
 </html>
