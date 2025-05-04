@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Recommend "{{ movie['title'] }}" | SmartFlicks{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-4">
+    <h2>🎁 Recommend "{{ movie['title'] }}"</h2>
+    <p class="text-muted">Select a friend to send your recommendation to:</p>
+
+    <div class="row justify-content-center mt-4">
+        {% if friends %}
+            {% for friend in friends %}
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ friend['username'] }}</h5>
+                        <form action="/recommend/{{ friend['id'] }}" method="POST">
+                            <input type="hidden" name="movie_id" value="{{ movie['id'] }}">
+                            <button type="submit" class="btn btn-primary w-100">🎯 Recommend</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">You have no friends to recommend this movie to.</p>
+        {% endif %}
+    </div>
+
+    <a href="/dashboard" class="btn btn-secondary mt-3">← Back to Dashboard</a>
+</div>
+{% endblock %}

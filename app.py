@@ -374,22 +374,41 @@ def recommend(friend_id):
     conn = get_db()
     user_id = session['user_id']
 
+    # Handle form submission to recommend a movie
     if request.method == 'POST':
-        movie_id = request.form['movie_id']
-        conn.execute('''
-            INSERT INTO friend_recommendations (recommender_id, friend_id, movie_id) 
-            VALUES (?, ?, ?)
-        ''', (user_id, friend_id, movie_id))
-        conn.commit()
+        movie_id = request.form.get('movie_id')
+        if movie_id:
+            # Prevent duplicate recommendation
+            exists = conn.execute('''
+                SELECT 1 FROM friend_recommendations 
+                WHERE recommender_id = ? AND friend_id = ? AND movie_id = ?
+            ''', (user_id, friend_id, movie_id)).fetchone()
+
+            if not exists:
+                conn.execute('''
+                    INSERT INTO friend_recommendations (recommender_id, friend_id, movie_id) 
+                    VALUES (?, ?, ?)
+                ''', (user_id, friend_id, movie_id))
+                conn.commit()
+
         conn.close()
         return redirect('/dashboard')
 
-    # Fetch movies and friend's info
-    movies = conn.execute('SELECT * FROM movies').fetchall()
-    friend = conn.execute('SELECT * FROM users WHERE id = ?', (friend_id,)).fetchone()
+    # Handle movie search on GET request
+    query = request.args.get('query', '').strip().lower()
+    if query:
+        movies = conn.execute('''
+            SELECT * FROM movies 
+            WHERE LOWER(title) LIKE ?
+            LIMIT 12
+        ''', (f'%{query}%',)).fetchall()
+    else:
+        movies = conn.execute('SELECT * FROM movies LIMIT 12').fetchall()
 
+    friend = conn.execute('SELECT * FROM users WHERE id = ?', (friend_id,)).fetchone()
     conn.close()
-    return render_template('recommend.html', friend=friend, movies=movies)
+
+    return render_template('recommend.html', friend=friend, movies=movies, friend_id=friend_id, query=query)
 
 # ✅ My Recommendations Route
 @app.route('/my_recommendations')
@@ -828,6 +847,32 @@ def search_movies():
         search_results=movies,
         query=query
     )
+
+@app.route('/recommend_friends/<int:movie_id>')
+def recommend_friends(movie_id):
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    user_id = session['user_id']
+    conn = get_db()
+
+    # Get the movie details
+    movie = conn.execute('SELECT * FROM movies WHERE id = ?', (movie_id,)).fetchone()
+    if not movie:
+        conn.close()
+        flash("Movie not found.", "danger")
+        return redirect(url_for('dashboard'))
+
+    # Get list of friends
+    friends = conn.execute('''
+        SELECT u.id, u.username
+        FROM friends f
+        JOIN users u ON f.friend_id = u.id
+        WHERE f.user_id = ?
+    ''', (user_id,)).fetchall()
+
+    conn.close()
+    return render_template('recommend_friends.html', movie=movie, friends=friends)
 
 if __name__ == "__main__":
     app.run(debug=True)

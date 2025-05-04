@@ -30,17 +30,15 @@
                     <img src="{{ movie['poster'] }}" onerror="this.onerror=null;this.src='/static/default_poster.png';" alt="{{ movie['title'] }}">
                     <div class="movie-title">{{ movie['title'] }}</div>
                     <div><span class="badge bg-primary badge-genre">{{ movie['genre'] }}</span></div>
-                    
+
                     <!-- Recommend Option -->
                     <div class="form-check recommend-btn mt-2 mb-2">
                         <input class="form-check-input" type="radio" name="movie_id" value="{{ movie['id'] }}" id="movie_{{ movie['id'] }}" required>
                         <label class="form-check-label ms-2" for="movie_{{ movie['id'] }}">Recommend This</label>
                     </div>
 
-                    <!-- Add to Watchlist -->
-                    <form method="POST" action="/add_to_watchlist/{{ movie['id'] }}">
-                        <button type="submit" class="btn btn-sm btn-outline-success w-100 mt-1">➕ Add to Watchlist</button>
-                    </form>
+                    <!-- Add to Watchlist (link instead of nested form) -->
+                    <a href="/add_to_watchlist/{{ movie['id'] }}" class="btn btn-sm btn-outline-success w-100 mt-1">➕ Add to Watchlist</a>
                 </div>
             </div>
             {% endfor %}
@@ -70,9 +68,7 @@
         {% for category, message in messages %}
         <div class="toast align-items-center text-bg-{{ category }} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
-                <div class="toast-body">
-                    {{ message }}
-                </div>
+                <div class="toast-body">{{ message }}</div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
